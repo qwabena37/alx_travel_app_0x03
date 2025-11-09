@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
@@ -27,7 +28,7 @@ class Location(models.Model):
 
 class Listings(models.Model):
     property_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    host_id = models.ForeignKey('user', on_delete=models.CASCADE, related_name='listings', null=False, db_index=True)
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=False)
     description = models.TextField()
     location_id = models.ForeignKey('location', on_delete=models.CASCADE, db_index=True)
@@ -42,7 +43,7 @@ class Listings(models.Model):
 class Booking(models.Model):
     booking_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property_id = models.ForeignKey('listings', on_delete=models.CASCADE, related_name='booking', null=False, db_index=True)
-    user_id = models.ForeignKey('user', on_delete=models.CASCADE, related_name='booking', null=False, db_index=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     status = models.CharField(max_length=200, null=False, choices=BOOKING_STATUS)
@@ -67,7 +68,7 @@ class Booking(models.Model):
 class Review(models.Model):
     review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property_id = models.ForeignKey('listings', on_delete=models.CASCADE, related_name='reviews', null=False, db_index=True)
-    user_id = models.ForeignKey('user', on_delete=models.CASCADE, related_name='reviews', null=False, db_index=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(null=False)
     comment = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)

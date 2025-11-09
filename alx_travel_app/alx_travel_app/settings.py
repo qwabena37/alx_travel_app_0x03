@@ -134,3 +134,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 CELERY_BROKER_URL = 'amqp://localhost'  # RabbitMQ default
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
